@@ -25,14 +25,15 @@ jobs:
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           python scripts/add_from_issue.py
 
-      - name: Commit db.json
+      - name: Commit files
         run: |
           git config user.name "clickpack-bot"
           git config user.email "bot@clickpackdb"
-          git add db.json
+          git add out db.json
           git commit -m "Add clickpack from issue #${{ github.event.issue.number }}"
           git push
 
@@ -41,8 +42,8 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            ✅ **Added to ClickpackDB!**
-            Thanks for the submission 💙
+            ✅ **Clickpack added successfully!**
+            It is now hosted directly on ClickpackDB and live on the site 💙
 
       - name: Close issue
         uses: peter-evans/close-issue@v3
