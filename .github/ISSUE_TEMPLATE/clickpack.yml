@@ -24,7 +24,8 @@ body:
     attributes:
       label: Upload your clickpack ZIP
       description: |
-        Drag & drop your **.zip file** into this box.
+        Drag & drop your ZIP file here.
+        OR click **“Paste, drop, or click to add files”** below and select it.
         No external links needed.
       placeholder: "Drop the ZIP file here"
     validations:
