@@ -64,4 +64,22 @@ with open("db.json", "r", encoding="utf-8") as f:
 
 now = datetime.utcnow()
 
-db["up]()
+db["updated_at_iso"] = now.isoformat() + "Z"
+db["updated_at_unix"] = int(now.timestamp())
+db["version"] = db.get("version", 0) + 1
+
+db["clickpacks"][name] = {
+    "author": author,
+    "size": size,
+    "uncompressed_size": uncompressed,
+    "has_noise": has_noise,
+    "url": url,
+    "checksum": checksum,
+    "readme": readme or None,
+    "version": db["version"]
+}
+
+with open("db.json", "w", encoding="utf-8") as f:
+    json.dump(db, f, indent=2)
+
+print("Clickpack added successfully.")
