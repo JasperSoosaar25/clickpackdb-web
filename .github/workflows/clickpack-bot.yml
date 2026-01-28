@@ -1,0 +1,21 @@
+name: Clickpack Submission Bot
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  handle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Acknowledge submission
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            💙 Thanks for submitting a clickpack!
+            A maintainer will review it shortly.
+            If everything checks out, it’ll be added to ClickpackDB ✨
