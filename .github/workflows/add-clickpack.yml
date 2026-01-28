@@ -10,7 +10,9 @@ permissions:
 
 jobs:
   add:
+    if: startsWith(github.event.issue.title, '[Clickpack]')
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -19,7 +21,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Run importer
+      - name: Import clickpack
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -34,13 +36,13 @@ jobs:
           git commit -m "Add clickpack from issue #${{ github.event.issue.number }}"
           git push
 
-      - name: Comment & close
+      - name: Comment success
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            ✅ This clickpack has been added to ClickpackDB!
-            Thanks for contributing 💙
+            ✅ **Added to ClickpackDB!**
+            Thanks for the submission 💙
 
       - name: Close issue
         uses: peter-evans/close-issue@v3
