@@ -37,8 +37,12 @@ author = section("Author")
 readme = section("Description / README")
 has_noise = "Contains noise.wav" in ISSUE_BODY
 
-# 🔥 FIND ATTACHED ZIP URL
-match = re.search(r"https://github.com/.+/files/\d+/.+\.zip", ISSUE_BODY)
+# 🔥 Find uploaded ZIP from GitHub issue attachment
+match = re.search(
+    r"https://github.com/user-attachments/files/\d+/[^\s)]+\.zip",
+    ISSUE_BODY
+)
+
 if not match:
     raise RuntimeError("No ZIP file uploaded to the issue")
 
@@ -88,4 +92,4 @@ db["clickpacks"][name] = {
 with open("db.json", "w", encoding="utf-8") as f:
     json.dump(db, f, indent=2)
 
-print("Clickpack uploaded & hosted:", raw_url)
+print("Clickpack added:", raw_url)
