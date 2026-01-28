@@ -1,0 +1,42 @@
+name: Clickpack submission
+description: Submit a new Geometry Dash clickpack to ClickpackDB
+title: "[Clickpack] "
+labels: ["submission"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Clickpack name
+      placeholder: "e.g. Soft Mechanical v2"
+    validations:
+      required: true
+
+  - type: input
+    id: author
+    attributes:
+      label: Author
+      placeholder: "Your username"
+    validations:
+      required: true
+
+  - type: input
+    id: download
+    attributes:
+      label: Download URL (zip)
+      placeholder: "https://..."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: noise
+    attributes:
+      label: Extra files
+      options:
+        - label: Contains noise.wav
+          required: false
+
+  - type: textarea
+    id: readme
+    attributes:
+      label: Description / README
+      placeholder: "Anything we should know?"
