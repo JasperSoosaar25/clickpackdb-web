@@ -24,7 +24,6 @@ jobs:
       - name: Import clickpack
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           python scripts/add_from_issue.py
@@ -43,7 +42,7 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           body: |
             ✅ **Clickpack added successfully!**
-            It is now hosted directly on ClickpackDB and live on the site 💙
+            It is now hosted directly on ClickpackDB 💙
 
       - name: Close issue
         uses: peter-evans/close-issue@v3
