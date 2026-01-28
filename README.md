@@ -3,39 +3,45 @@
 A clean, community-driven database of **Geometry Dash clickpacks**  
 Fast API, clean sounds, cyan vibes ✨
 
-🌐 **Live site:**  
+🌐 **Live website:**  
 👉 https://jaspersoosaar25.github.io/clickpackdb-web/
 
 ---
 
-## 🚧 Site status
+## 🟢 Site status
 
-**🟢 Live, but actively being worked on!**
+**LIVE — and actively being improved**
 
-The website is online and usable right now, but it’s **constantly evolving**.
-You might see:
-- UI changes
-- new features
-- layout tweaks
-- new clickpacks being added automatically
+The website is **fully live and usable right now**:
+- clickpacks are visible
+- downloads work
+- submissions work
+- the API (`db.json`) is public
 
-If something looks slightly different one day — that’s intentional :3
+At the same time, this project is **actively being developed**, which means:
+- the UI may change
+- features may be added or adjusted
+- layouts and visuals may be tweaked
+- new automation may be introduced
+
+If something looks different from one day to the next, that’s expected :3
 
 ---
 
-## 📦 What this is
+## 📦 What this project does
 
-- A public clickpack database
-- Community submissions via GitHub Issues
-- Automatic processing & updates
-- One simple API (`db.json`)
-- Hosted on GitHub Pages
+- Hosts a public clickpack database
+- Accepts community submissions via GitHub Issues
+- Automatically processes and stores clickpacks
+- Re-hosts files directly in this repository
+- Exposes everything through a simple JSON API
+- Displays clickpacks on a GitHub Pages website
 
-Clickpacks are fetched from:
-- the **official ClickpackDB**
+Clickpacks shown on the site come from:
+- the **official ClickpackDB repository**
 - **this repository’s community submissions**
 
-Both are merged into one clean view on the site ✨
+Both sources are merged into one clean list on the site ✨
 
 ---
 
@@ -45,18 +51,28 @@ You can submit a clickpack here:
 
 👉 https://github.com/JasperSoosaar25/clickpackdb-web/issues/new?template=clickpack.yml
 
-Once submitted:
-- a bot processes it
-- updates the database
-- and it appears on the site automatically 💙
+How it works:
+1. Open a new issue (make sure to choose "Clickpack submission" not "Blank issue"!!!:333)
+2. Upload your `.zip` file directly (drag & drop or click “Paste, drop, or click to add files” below of the "Upload your clickpack ZIP" section)
+3. Fill in the details
+4. Submit
+
+A bot will:
+- download the uploaded ZIP
+- store it permanently in this repository
+- update the database
+- make it available on the site automatically 💙
+
+No external hosting required.
 
 ---
 
 ## 🫶 Notes
 
 This project is:
-- experimental
 - open-source
-- built with love and :3 energy
+- experimental
+- actively maintained
+- built with way too much effort and :3 energy
 
 Feedback, ideas, and contributions are always welcome ✨
