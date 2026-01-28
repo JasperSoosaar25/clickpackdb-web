@@ -3,10 +3,12 @@ import os
 import zipfile
 import hashlib
 import urllib.request
+import re
 from datetime import datetime
 
 ISSUE_BODY = os.environ["ISSUE_BODY"]
 ISSUE_NUMBER = os.environ["ISSUE_NUMBER"]
+REPO = os.environ["GITHUB_REPOSITORY"]
 
 def section(title):
     marker = f"### {title}"
@@ -24,30 +26,10 @@ def section(title):
 
     return "\n".join(out).strip().replace("_No response_", "").strip()
 
-name = section("Clickpack name")
-author = section("Author")
-url = section("Download URL (zip)")
-readme = section("Description / README")
-has_noise = "Contains noise.wav" in ISSUE_BODY
-
-if not url:
-    raise RuntimeError("Download URL is empty")
-
-print("Adding:", name)
-
-os.makedirs("tmp", exist_ok=True)
-zip_path = f"tmp/{ISSUE_NUMBER}.zip"
-
-# ✅ FIX: add User-Agent so Cloudflare R2 allows download
-req = urllib.request.Request(
-    url,
-    headers={
-        "User-Agent": "ClickpackDB-Bot/1.0 (+https://github.com/zeozeozeo/clickpack-db)"
-    }
-)
-
-with urllib.request.urlopen(req) as resp, open(zip_path, "wb") as f:
-    f.write(resp.read())
+def slugify(text):
+    text = text.lower()
+    text = re.sub(r"[^a-z0-9]+", "-", text)
+    return text.strip("-")
 
 def md5(path):
     h = hashlib.md5()
@@ -56,12 +38,41 @@ def md5(path):
             h.update(chunk)
     return h.hexdigest()
 
+name = section("Clickpack name")
+author = section("Author")
+source_url = section("Download URL (zip)")
+readme = section("Description / README")
+has_noise = "Contains noise.wav" in ISSUE_BODY
+
+if not source_url:
+    raise RuntimeError("No download URL provided")
+
+slug = slugify(name)
+out_dir = f"out/{slug}"
+os.makedirs(out_dir, exist_ok=True)
+
+zip_path = f"{out_dir}/clickpack.zip"
+
+# Download with User-Agent (Cloudflare-safe)
+req = urllib.request.Request(
+    source_url,
+    headers={"User-Agent": "ClickpackDB-Bot/1.0"}
+)
+
+with urllib.request.urlopen(req) as r, open(zip_path, "wb") as f:
+    f.write(r.read())
+
 size = os.path.getsize(zip_path)
 
 with zipfile.ZipFile(zip_path) as z:
     uncompressed = sum(i.file_size for i in z.infolist())
 
 checksum = md5(zip_path)
+
+raw_url = (
+    f"https://raw.githubusercontent.com/"
+    f"{REPO}/main/{zip_path}"
+)
 
 with open("db.json", "r", encoding="utf-8") as f:
     db = json.load(f)
@@ -77,7 +88,7 @@ db["clickpacks"][name] = {
     "size": size,
     "uncompressed_size": uncompressed,
     "has_noise": has_noise,
-    "url": url,
+    "url": raw_url,
     "checksum": checksum,
     "readme": readme or None,
     "version": db["version"]
@@ -86,4 +97,4 @@ db["clickpacks"][name] = {
 with open("db.json", "w", encoding="utf-8") as f:
     json.dump(db, f, indent=2)
 
-print("Clickpack added successfully.")
+print("Clickpack stored at:", raw_url)
