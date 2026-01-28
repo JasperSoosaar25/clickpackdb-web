@@ -1,7 +1,5 @@
 import json
 import os
-import re
-import sys
 import zipfile
 import hashlib
 import urllib.request
@@ -10,23 +8,35 @@ from datetime import datetime
 ISSUE_BODY = os.environ["ISSUE_BODY"]
 ISSUE_NUMBER = os.environ["ISSUE_NUMBER"]
 
-# --- helpers ---
-def md5(path):
-    h = hashlib.md5()
-    with open(path, "rb") as f:
-        for chunk in iter(lambda: f.read(8192), b""):
-            h.update(chunk)
-    return h.hexdigest()
+def section(title):
+    """
+    Extracts text under a markdown heading like:
+    ### Title
+    content
+    """
+    marker = f"### {title}"
+    if marker not in ISSUE_BODY:
+        return ""
 
-def parse(label):
-    m = re.search(rf"{label}\n(.+)", ISSUE_BODY)
-    return m.group(1).strip() if m else ""
+    part = ISSUE_BODY.split(marker, 1)[1]
+    lines = part.strip().splitlines()
 
-name = parse("Clickpack name")
-author = parse("Author")
-url = parse("Download URL")
+    out = []
+    for line in lines:
+        if line.startswith("### "):
+            break
+        out.append(line)
+
+    return "\n".join(out).strip().replace("_No response_", "").strip()
+
+name = section("Clickpack name")
+author = section("Author")
+url = section("Download URL (zip)")
+readme = section("Description / README")
 has_noise = "Contains noise.wav" in ISSUE_BODY
-readme = parse("Description / README")
+
+if not url:
+    raise RuntimeError("Download URL is empty — issue format invalid")
 
 print("Adding:", name)
 
@@ -35,6 +45,13 @@ zip_path = f"tmp/{ISSUE_NUMBER}.zip"
 
 urllib.request.urlretrieve(url, zip_path)
 
+def md5(path):
+    h = hashlib.md5()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
 size = os.path.getsize(zip_path)
 
 with zipfile.ZipFile(zip_path) as z:
@@ -42,27 +59,9 @@ with zipfile.ZipFile(zip_path) as z:
 
 checksum = md5(zip_path)
 
-# --- load db ---
 with open("db.json", "r", encoding="utf-8") as f:
     db = json.load(f)
 
-db["updated_at_iso"] = datetime.utcnow().isoformat() + "Z"
-db["updated_at_unix"] = int(datetime.utcnow().timestamp())
+now = datetime.utcnow()
 
-db["clickpacks"][name] = {
-    "author": author,
-    "size": size,
-    "uncompressed_size": uncompressed,
-    "has_noise": has_noise,
-    "url": url,
-    "checksum": checksum,
-    "readme": readme or None,
-    "version": db.get("version", 0) + 1
-}
-
-db["version"] = db.get("version", 0) + 1
-
-with open("db.json", "w", encoding="utf-8") as f:
-    json.dump(db, f, indent=2)
-
-print("Done.")
+db["up]()
