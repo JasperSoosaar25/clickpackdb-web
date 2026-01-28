@@ -5,6 +5,7 @@ import hashlib
 import urllib.request
 import re
 from datetime import datetime
+from urllib.parse import urlparse, unquote
 
 ISSUE_BODY = os.environ["ISSUE_BODY"]
 REPO = os.environ["GITHUB_REPOSITORY"]
@@ -48,11 +49,15 @@ if not match:
 
 zip_url = match.group(0)
 
+# ✅ Extract original filename from URL
+parsed = urlparse(zip_url)
+original_filename = unquote(os.path.basename(parsed.path))
+
 slug = slugify(name)
 out_dir = f"out/{slug}"
 os.makedirs(out_dir, exist_ok=True)
 
-zip_path = f"{out_dir}/clickpack.zip"
+zip_path = f"{out_dir}/{original_filename}"
 
 req = urllib.request.Request(
     zip_url,
@@ -63,12 +68,16 @@ with urllib.request.urlopen(req) as r, open(zip_path, "wb") as f:
     f.write(r.read())
 
 size = os.path.getsize(zip_path)
+
 with zipfile.ZipFile(zip_path) as z:
     uncompressed = sum(i.file_size for i in z.infolist())
 
 checksum = md5(zip_path)
 
-raw_url = f"https://raw.githubusercontent.com/{REPO}/main/{zip_path}"
+raw_url = (
+    f"https://raw.githubusercontent.com/"
+    f"{REPO}/main/{zip_path}"
+)
 
 with open("db.json", "r", encoding="utf-8") as f:
     db = json.load(f)
