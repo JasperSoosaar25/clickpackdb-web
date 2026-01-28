@@ -4,13 +4,13 @@ on:
   issues:
     types: [opened]
 
+permissions:
+  issues: write
+
 jobs:
   handle:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Acknowledge submission
         uses: peter-evans/create-or-update-comment@v4
         with:
