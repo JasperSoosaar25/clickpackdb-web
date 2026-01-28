@@ -66,7 +66,7 @@ a.btn:hover {
 
 main {
   padding: 30px 20px 60px;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: auto;
 }
 
@@ -83,8 +83,8 @@ main {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
 }
 
 .card {
@@ -92,15 +92,48 @@ main {
   border-radius: 16px;
   padding: 16px;
   border: 1px solid #183043;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .card h3 {
-  margin: 0 0 6px;
+  margin: 0;
   color: var(--cyan);
+  font-size: 1.1rem;
 }
 
 .meta {
   font-size: .85rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: .75rem;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #102636;
+  color: var(--cyan);
+  border: 1px solid #1c3f55;
+}
+
+.footer-row {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.source {
+  font-size: .75rem;
   color: var(--muted);
 }
 
@@ -140,33 +173,74 @@ footer {
 </footer>
 
 <script>
-const DB_URL =
-  "https://raw.githubusercontent.com/JasperSoosaar25/clickpackdb-web/main/db.json";
+const SOURCES = [
+  {
+    name: "official",
+    url: "https://raw.githubusercontent.com/zeozeozeo/clickpack-db/main/db.json"
+  },
+  {
+    name: "yours",
+    url: "https://raw.githubusercontent.com/JasperSoosaar25/clickpackdb-web/main/db.json"
+  }
+];
 
 const grid = document.getElementById("grid");
 const search = document.getElementById("search");
+
 let all = [];
 
-fetch(DB_URL)
-  .then(r => r.json())
-  .then(data => {
-    all = Object.entries(data.clickpacks || {});
-    render(all);
-  });
+Promise.all(
+  SOURCES.map(s =>
+    fetch(s.url)
+      .then(r => r.json())
+      .then(d => ({ source: s.name, data: d.clickpacks || {} }))
+      .catch(() => ({ source: s.name, data: {} }))
+  )
+).then(results => {
+  const merged = {};
+
+  for (const { source, data } of results) {
+    for (const [name, cp] of Object.entries(data)) {
+      merged[name] = { ...cp, source };
+    }
+  }
+
+  all = Object.entries(merged);
+  render(all);
+});
 
 function render(list) {
   grid.innerHTML = "";
+
   for (const [name, cp] of list) {
-    const div = document.createElement("div");
-    div.className = "card";
-    div.innerHTML = `
+    const sizeKB = cp.size ? (cp.size / 1024).toFixed(1) : "?";
+    const unpackKB = cp.uncompressed_size
+      ? (cp.uncompressed_size / 1024).toFixed(1)
+      : "?";
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
       <h3>${name}</h3>
+
       <div class="meta">
-        ${(cp.size / 1024).toFixed(1)} KB • ${cp.has_noise ? "noise" : "no noise"}
+        👤 ${cp.author || "Unknown"}<br>
+        📦 ${sizeKB} KB • 📂 ${unpackKB} KB
       </div>
-      <a class="btn" href="${cp.url}" target="_blank">Download</a>
+
+      <div class="tags">
+        <span class="tag">${cp.has_noise ? "noise" : "no noise"}</span>
+        <span class="tag">${cp.source}</span>
+      </div>
+
+      <div class="footer-row">
+        <a class="btn" href="${cp.url}" target="_blank">Download</a>
+        <span class="source">${cp.source}</span>
+      </div>
     `;
-    grid.appendChild(div);
+
+    grid.appendChild(card);
   }
 }
 
