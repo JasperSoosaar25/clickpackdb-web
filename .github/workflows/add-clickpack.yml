@@ -1,0 +1,48 @@
+name: Add clickpack from issue
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  add:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run importer
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          python scripts/add_from_issue.py
+
+      - name: Commit db.json
+        run: |
+          git config user.name "clickpack-bot"
+          git config user.email "bot@clickpackdb"
+          git add db.json
+          git commit -m "Add clickpack from issue #${{ github.event.issue.number }}"
+          git push
+
+      - name: Comment & close
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            ✅ This clickpack has been added to ClickpackDB!
+            Thanks for contributing 💙
+
+      - name: Close issue
+        uses: peter-evans/close-issue@v3
+        with:
+          issue-number: ${{ github.event.issue.number }}
