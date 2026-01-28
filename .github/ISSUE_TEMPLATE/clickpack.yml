@@ -1,5 +1,5 @@
 name: Clickpack submission
-description: Submit a Geometry Dash clickpack to ClickpackDB
+description: Upload a Geometry Dash clickpack directly to ClickpackDB
 title: "[Clickpack] "
 labels: ["clickpack"]
 body:
@@ -7,7 +7,6 @@ body:
     id: name
     attributes:
       label: Clickpack name
-      description: The name that will appear on the site
       placeholder: "e.g. Hator Icefall Up Arrow Key"
     validations:
       required: true
@@ -16,20 +15,18 @@ body:
     id: author
     attributes:
       label: Author
-      description: Your username or name
-      placeholder: "e.g. JasperSoosaar25"
+      placeholder: "Your username"
     validations:
       required: true
 
-  - type: input
-    id: download
+  - type: textarea
+    id: upload
     attributes:
-      label: Download URL (zip)
-      description: >
-        A direct ZIP file URL.
-        GitHub raw links, GitHub Releases, or Cloudflare R2 links are supported.
-        This file will be re-hosted automatically by ClickpackDB.
-      placeholder: "https://raw.githubusercontent.com/.../clickpack.zip"
+      label: Upload your clickpack ZIP
+      description: |
+        Drag & drop your **.zip file** into this box.
+        No external links needed.
+      placeholder: "Drop the ZIP file here"
     validations:
       required: true
 
@@ -37,14 +34,11 @@ body:
     id: extras
     attributes:
       label: Extra files
-      description: Check if your clickpack contains additional files
       options:
         - label: Contains noise.wav
-          required: false
 
   - type: textarea
     id: readme
     attributes:
       label: Description / README
-      description: Optional description shown in the database
-      placeholder: "Anything we should know about this clickpack?"
+      placeholder: "Optional description"
