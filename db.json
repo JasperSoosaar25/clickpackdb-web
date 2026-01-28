@@ -1,17 +1,6 @@
 {
-  "updated_at_iso": "2026-01-28T16:41:16.501462Z",
-  "updated_at_unix": 1769618476,
-  "version": 1,
-  "clickpacks": {
-    "Hator Icefall Up Arrow Key": {
-      "author": "JasperSoosaar25",
-      "size": 5758,
-      "uncompressed_size": 5358,
-      "has_noise": true,
-      "url": "https://raw.githubusercontent.com/JasperSoosaar25/clickpackdb-web/main/out/hator-icefall-up-arrow-key/clickpack.zip",
-      "checksum": "83dfb3ad515b42db967ac96cbdaf713b",
-      "readme": null,
-      "version": 1
-    }
-  }
+  "updated_at_iso": "",
+  "updated_at_unix": 0,
+  "version": 0,
+  "clickpacks": {}
 }
