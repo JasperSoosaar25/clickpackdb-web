@@ -9,11 +9,6 @@ ISSUE_BODY = os.environ["ISSUE_BODY"]
 ISSUE_NUMBER = os.environ["ISSUE_NUMBER"]
 
 def section(title):
-    """
-    Extracts text under a markdown heading like:
-    ### Title
-    content
-    """
     marker = f"### {title}"
     if marker not in ISSUE_BODY:
         return ""
@@ -36,14 +31,23 @@ readme = section("Description / README")
 has_noise = "Contains noise.wav" in ISSUE_BODY
 
 if not url:
-    raise RuntimeError("Download URL is empty — issue format invalid")
+    raise RuntimeError("Download URL is empty")
 
 print("Adding:", name)
 
 os.makedirs("tmp", exist_ok=True)
 zip_path = f"tmp/{ISSUE_NUMBER}.zip"
 
-urllib.request.urlretrieve(url, zip_path)
+# ✅ FIX: add User-Agent so Cloudflare R2 allows download
+req = urllib.request.Request(
+    url,
+    headers={
+        "User-Agent": "ClickpackDB-Bot/1.0 (+https://github.com/zeozeozeo/clickpack-db)"
+    }
+)
+
+with urllib.request.urlopen(req) as resp, open(zip_path, "wb") as f:
+    f.write(resp.read())
 
 def md5(path):
     h = hashlib.md5()
