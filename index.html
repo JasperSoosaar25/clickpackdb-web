@@ -48,20 +48,18 @@ header p {
   margin-top: 18px;
 }
 
-button, a.btn {
+a.btn {
   background: linear-gradient(135deg, var(--cyan), var(--cyan-soft));
-  border: none;
   color: #001018;
   padding: 10px 16px;
   border-radius: 10px;
   font-weight: 700;
-  cursor: pointer;
   text-decoration: none;
-  transition: transform .2s ease, box-shadow .2s ease;
   box-shadow: 0 0 20px rgba(77,220,255,.25);
+  transition: transform .2s ease, box-shadow .2s ease;
 }
 
-button:hover, a.btn:hover {
+a.btn:hover {
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 0 35px rgba(77,220,255,.45);
 }
@@ -94,14 +92,6 @@ main {
   border-radius: 16px;
   padding: 16px;
   border: 1px solid #183043;
-  position: relative;
-  overflow: hidden;
-  animation: pop .4s ease;
-}
-
-@keyframes pop {
-  from { transform: scale(.95); opacity: 0 }
-  to { transform: scale(1); opacity: 1 }
 }
 
 .card h3 {
@@ -112,21 +102,6 @@ main {
 .meta {
   font-size: .85rem;
   color: var(--muted);
-}
-
-.readme {
-  margin-top: 10px;
-  font-size: .9rem;
-  color: #d6eaff;
-  white-space: pre-wrap;
-  max-height: 90px;
-  overflow: hidden;
-  mask-image: linear-gradient(to bottom, black 60%, transparent);
-}
-
-.card a {
-  display: inline-block;
-  margin-top: 12px;
 }
 
 footer {
@@ -147,7 +122,9 @@ footer {
   </p>
 
   <div class="actions">
-    <a class="btn" href="https://github.com/zeozeozeo/clickpack-db/issues/new?template=clickpack.yml" target="_blank">
+    <a class="btn"
+       href="https://github.com/JasperSoosaar25/clickpackdb-web/issues/new?template=clickpack.yml"
+       target="_blank">
       Submit a clickpack
     </a>
   </div>
@@ -155,7 +132,6 @@ footer {
 
 <main>
   <input id="search" placeholder="Search clickpacks…" />
-
   <div id="grid" class="grid"></div>
 </main>
 
@@ -164,7 +140,9 @@ footer {
 </footer>
 
 <script>
-const DB_URL = "https://raw.githubusercontent.com/zeozeozeo/clickpack-db/main/db.json";
+const DB_URL =
+  "https://raw.githubusercontent.com/JasperSoosaar25/clickpackdb-web/main/db.json";
+
 const grid = document.getElementById("grid");
 const search = document.getElementById("search");
 let all = [];
@@ -172,26 +150,23 @@ let all = [];
 fetch(DB_URL)
   .then(r => r.json())
   .then(data => {
-    all = Object.entries(data.clickpacks);
+    all = Object.entries(data.clickpacks || {});
     render(all);
   });
 
 function render(list) {
   grid.innerHTML = "";
   for (const [name, cp] of list) {
-    const card = document.createElement("div");
-    card.className = "card";
-
-    card.innerHTML = `
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `
       <h3>${name}</h3>
       <div class="meta">
-        ${format(cp.size)} • ${cp.has_noise ? "noise" : "no noise"}
+        ${(cp.size / 1024).toFixed(1)} KB • ${cp.has_noise ? "noise" : "no noise"}
       </div>
-      ${cp.readme ? `<div class="readme">${escape(cp.readme)}</div>` : ""}
       <a class="btn" href="${cp.url}" target="_blank">Download</a>
     `;
-
-    grid.appendChild(card);
+    grid.appendChild(div);
   }
 }
 
@@ -199,14 +174,6 @@ search.addEventListener("input", () => {
   const q = search.value.toLowerCase();
   render(all.filter(([n]) => n.toLowerCase().includes(q)));
 });
-
-function format(bytes) {
-  return (bytes / 1024).toFixed(1) + " KB";
-}
-
-function escape(str) {
-  return str.replace(/[&<>]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;" }[c]));
-}
 </script>
 </body>
 </html>
