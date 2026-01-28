@@ -27,7 +27,7 @@ body:
         Drag & drop your ZIP file here.
         OR click **“Paste, drop, or click to add files”** below and select it.
         No external links needed.
-      placeholder: "Drop the ZIP file here"
+      placeholder: "Drop the ZIP file here OR click “Paste, drop, or click to add files” below"
     validations:
       required: true
 
