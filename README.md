@@ -52,7 +52,7 @@ You can submit a clickpack here:
 👉 https://github.com/JasperSoosaar25/clickpackdb-web/issues/new?template=clickpack.yml
 
 How it works:
-1. Open a new issue (make sure to choose "Clickpack submission" not "Blank issue"!!!:333)
+1. Open a new issue (make sure to choose "Clickpack submission" not "Blank issue" if not following the link above!!!:333)
 2. Upload your `.zip` file directly (drag & drop or click “Paste, drop, or click to add files” below of the "Upload your clickpack ZIP" section)
 3. Fill in the details
 4. Submit
