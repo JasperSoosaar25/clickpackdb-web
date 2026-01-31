@@ -1,17 +1,6 @@
 {
-  "updated_at_iso": "2026-01-28T16:46:51.294688Z",
-  "updated_at_unix": 1769618811,
-  "version": 1,
-  "clickpacks": {
-    "Jasper's Hator Icefall Up Arrow Key": {
-      "author": "JasperSoosaar25",
-      "size": 5758,
-      "uncompressed_size": 5358,
-      "has_noise": true,
-      "url": "https://raw.githubusercontent.com/JasperSoosaar25/clickpackdb-web/main/out/jasper-s-hator-icefall-up-arrow-key/jasper.jaspers-hator-icefall-up-arrow-key.packgen.zip",
-      "checksum": "83dfb3ad515b42db967ac96cbdaf713b",
-      "readme": null,
-      "version": 1
-    }
-  }
+  "updated_at_iso": "",
+  "updated_at_unix": 0,
+  "version": 0,
+  "clickpacks": {}
 }
