@@ -4,7 +4,7 @@ A clean, community-driven database of **Geometry Dash clickpacks**
 Fast API, clean sounds, cyan vibes ✨
 
 🌐 **Live website:**  
-👉 https://jaspersoosaar25.github.io/clickpackdb-web/
+👉 https://clickpackdb.xyz
 
 ---
 
